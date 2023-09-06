@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const pollsSchema = require("./pollsSchema");
 const PollsUsers = mongoose.Schema({
   email: { type: String },
   password: { type: String },
@@ -8,7 +8,7 @@ const PollsUsers = mongoose.Schema({
     {
       Title: { type: String },
       Description: { type: String },
-      Time: { type: String },
+      
       Options: [
         {
           option: { type: String },
@@ -17,6 +17,7 @@ const PollsUsers = mongoose.Schema({
           submited: { type: Boolean },
         },
       ],
+      
     },
   ],
 });

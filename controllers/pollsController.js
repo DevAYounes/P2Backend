@@ -1,20 +1,17 @@
 const PersonaUser = require("../db/PersonaUser");
 
 const addPolls = async (req, res) => {
-  const person = req.body;
-  const newPoll = await PersonaUser.findOneAndUpdate(
-    {
-      email: person.email,
-    },
-    {
-      //add options
-    },
+  const email = req.params.email;
+  const poll = req.body;
+  let person = await PersonaUser.findOneAndUpdate(
+    { email: email },
+    { polls: poll },
     {
       new: true,
       upsert: true,
     }
   );
-  res.status(200).send(newPoll);
+  res.json(person);
 };
 const getPolls = async (req, res) => {
   const email = req.body.email;
@@ -25,4 +22,20 @@ const getPolls = async (req, res) => {
   res.send(polls);
 };
 
-module.exports = { addPolls, getPolls };
+const submit = async (req, res) => {
+  //Change submitted state
+  const email = req.params.email;
+  const pollCard = req.params.pollCard;
+  let person = await PersonaUser.findOneAndUpdate(
+    { email: email },
+    { polls: { Options: { submited: true } } },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
+  res.json(person);
+
+  res.status(200).send();
+};
+module.exports = { addPolls, getPolls, submit };
