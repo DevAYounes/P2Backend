@@ -5,7 +5,7 @@ const addPolls = async (req, res) => {
   const poll = req.body;
   let person = await PersonaUser.findOneAndUpdate(
     { email: email },
-    { polls: poll },
+    { $push: { polls: { poll } } },
     {
       new: true,
       upsert: true,
