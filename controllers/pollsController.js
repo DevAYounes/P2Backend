@@ -1,4 +1,5 @@
 const PersonaUser = require("../db/PersonaUser");
+const ObjectId = require("mongodb").ObjectId;
 
 const addPolls = async (req, res) => {
   const email = req.params.email;
@@ -21,7 +22,6 @@ const getPolls = async (req, res) => {
     return o.polls;
   });
 
-  console.log(polls);
   res.send(polls);
 };
 const getMyPolls = async (req, res) => {
@@ -46,18 +46,46 @@ const submit = async (req, res) => {
   //Change submitted state
   const title = req.params.title;
   const value = req.params.value;
-  const users = await PersonaUser.find();
-  const polls = users.map((p) => {
-    return p.polls;
-  });
-  const filteredPolls = polls.filter((f) => {
-    return f.length;
-  });
-  const card = filteredPolls[0].map((c) => {
-    return (c.Title = title);
-  });
+  var voteId;
+  const FindByTitle = await PersonaUser.find({ "polls.Title": title });
+  const Card = FindByTitle[0].polls;
+  const Options = Card[0].Options;
 
-  console.log(filteredPolls[0]);
-  res.send("s");
+  for (let i = 0; i < Options.length; i++) {
+    if (Options[i].value == value) {
+      voteId = Options[i]._id;
+    }
+  }
+
+  // const updated = await PersonaUser.updateOne(
+  //   { _id: id },
+  //   { "submited.$": true },
+  //   { new: true }
+  // );
+  const idSearch = await PersonaUser.findById("64fa782b8d9efeacdafdd6be");
+  console.log(idSearch);
+  // for (let i = 0; i < Options.length; i++) {
+  //   if (Options[i].value == value) {
+  //     Options[i].value=3
+
+  //   }
+  // }
+  //   const s = await PersonaUser.updateOne(
+  //     { "polls.Title": title ,"polls.Options.value":value},
+  //     {
+  //       $push: {
+  //         polls: {
+  //             Options:{
+  //               votes:4
+  //             }
+  //         },
+  //       },
+  //     },
+  //     {
+  //       new: true,
+
+  //     }
+  //   );
+  //   console.log(s);
 };
 module.exports = { addPolls, getPolls, submit, getMyPolls, getActivePolls };
