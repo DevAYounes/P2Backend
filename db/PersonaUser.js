@@ -6,9 +6,10 @@ const PollsUsers = mongoose.Schema({
   fullName: { type: String },
   polls: [
     {
+      Time:{type: String},
       Title: { type: String },
       Description: { type: String },
-      
+      pollMaker: { type: String },
       Options: [
         {
           option: { type: String },
@@ -17,7 +18,6 @@ const PollsUsers = mongoose.Schema({
           submited: { type: Boolean },
         },
       ],
-      
     },
   ],
 });

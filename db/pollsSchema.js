@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+//Disabled Schema
 const pollsSchema = mongoose.Schema({
   polls: [
     {
@@ -14,7 +14,7 @@ const pollsSchema = mongoose.Schema({
           submited: { type: Boolean },
         },
       ],
-      owner: { type: mongoose.Schema.Types.ObjectId, ref: "PollsUsers" },
+     
     },
   ],
 });

@@ -3,9 +3,11 @@ const PersonaUser = require("../db/PersonaUser");
 const addPolls = async (req, res) => {
   const email = req.params.email;
   const poll = req.body;
-  let person = await PersonaUser.findOneAndUpdate(
+  console.log(poll);
+
+  let person = await PersonaUser.updateOne(
     { email: email },
-    { $push: { polls: { poll } } },
+    { $push: { polls: poll } },
     {
       new: true,
       upsert: true,
@@ -14,28 +16,48 @@ const addPolls = async (req, res) => {
   res.json(person);
 };
 const getPolls = async (req, res) => {
-  const email = req.body.email;
-  const person = await PersonaUser.find({
-    email: email,
+  const Users = await PersonaUser.find();
+  const polls = Users.map((o) => {
+    return o.polls;
   });
-  const polls = person[0].Options;
+
+  console.log(polls);
   res.send(polls);
 };
+const getMyPolls = async (req, res) => {
+  const email = req.params.email;
+  const Users = await PersonaUser.find({ email: email });
+  const polls = Users.map((o) => {
+    return o.polls;
+  });
 
+  res.send(polls);
+};
+const getActivePolls = async (req, res) => {
+  const email = req.params.email;
+  const Users = await PersonaUser.find({ email: email });
+  const polls = Users.map((o) => {
+    return o.polls;
+  });
+
+  res.send(polls);
+};
 const submit = async (req, res) => {
   //Change submitted state
-  const email = req.params.email;
-  const pollCard = req.params.pollCard;
-  let person = await PersonaUser.findOneAndUpdate(
-    { email: email },
-    { polls: { Options: { submited: true } } },
-    {
-      new: true,
-      upsert: true,
-    }
-  );
-  res.json(person);
+  const title = req.params.title;
+  const value = req.params.value;
+  const users = await PersonaUser.find();
+  const polls = users.map((p) => {
+    return p.polls;
+  });
+  const filteredPolls = polls.filter((f) => {
+    return f.length;
+  });
+  const card = filteredPolls[0].map((c) => {
+    return (c.Title = title);
+  });
 
-  res.status(200).send();
+  console.log(filteredPolls[0]);
+  res.send("s");
 };
-module.exports = { addPolls, getPolls, submit };
+module.exports = { addPolls, getPolls, submit, getMyPolls, getActivePolls };
