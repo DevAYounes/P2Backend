@@ -7,7 +7,7 @@ var cors = require("cors");
 const api = require("./api/api");
 //middlewares
 const app = express();
-//this is a test 
+//this is a test for git
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
